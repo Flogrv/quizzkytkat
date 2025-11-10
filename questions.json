@@ -1,0 +1,136 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "category": "Cybersecurity",
+      "text": "Threat intelligence helps organizations understand the motives and behaviors of cyber attackers. Which of the following is a common benefit to using threat intelligence?",
+      "options": [
+        "Threat intelligence ensures organizations can prevent all cyber attacks",
+        "Threat intelligence can provide some advance notice so organizations are able to better prepare their defenses to stop an attack from occurring",
+        "Threat intelligence is often a legal requirement",
+        "Threat intelligence helps reduce litigation costs after a breach when organizations share information with each other"
+      ],
+      "answer": 1
+    },
+    {
+      "id": 2,
+      "category": "Cybersecurity",
+      "text": "What type of cyber attack involves causing a system to partially crash and be unable to perform work at normal levels?",
+      "options": [
+        "Man in the middle (MitM) attack",
+        "Credential stuffing attack",
+        "Spear phishing attack",
+        "Denial of service (DoS) attack"
+      ],
+      "answer": 3
+    },
+    {
+      "id": 3,
+      "category": "Cybersecurity",
+      "text": "Which of the following describes the \"transfer\" risk response method?",
+      "options": [
+        "The organization accepts the risk in its current form. A \"risk owner\" makes this decision",
+        "The organization decides a risk is too large to accept and tries to have it reduced, either by reducing the likelihood or consequence",
+        "The organization has a third party accept the risk, or part of it, instead of accepting it themselves. This can be done via insurance",
+        "The organization decides a risk is too high and withdraws from being affected by it"
+      ],
+      "answer": 2
+    },
+    {
+      "id": 4,
+      "category": "Cybersecurity",
+      "text": "Which of the following is NOT one of the three key elements of cybersecurity?",
+      "options": [
+        "People",
+        "Process",
+        "Ports",
+        "Technology"
+      ],
+      "answer": 2
+    },
+    {
+      "id": 5,
+      "category": "Cybersecurity",
+      "text": "Information security's objectives are often defined using the CIA triad. CIA is a mnemonic for the three objectives. What are they?",
+      "options": [
+        "Comprehensive, Integrated, and Accessible",
+        "Confidentiality, Integrity, and Availability",
+        "Confident, Intelligent, and Automatic",
+        "Complete, Impartial, and Aware"
+      ],
+      "answer": 1
+    },
+    {
+      "id": 6,
+      "category": "Cybersecurity",
+      "text": "Which of the following is a common approach that organizations use to detect cyber attacks?",
+      "options": [
+        "Using security information and event management (SIEM) tools",
+        "Disabling all forms of encryption within an internal network",
+        "Allowing all security staff continuous access to every file an organization has produced",
+        "Setting up an access control list (ACL)"
+      ],
+      "answer": 0
+    },
+    {
+      "id": 7,
+      "category": "Cybersecurity",
+      "text": "Which of the following describes the threat actor group called script kiddies?",
+      "options": [
+        "Mostly teenagers and young adults who are self-taught, rely on basic hacking tools, and are motivated by having fun and gaining reputations in the hacking community",
+        "A diverse group of organized people who are driven by ideologies or causes, use a range of tools, and want to bring about change",
+        "A broad, growing group of cyber-based criminals who have a range of tools, often develop their own malware, and are driven by financial motivations",
+        "Members within an organization who become resentful or bitter, typically use granted corporate access instead of technical skills or budget, and are motivated by revenge or financial gain"
+      ],
+      "answer": 0
+    },
+    {
+      "id": 8,
+      "category": "Cybersecurity",
+      "text": "Which cybersecurity job role is responsible for determining if a reported alert is an organizational attack, scoping out the extent of the cybersecurity incident, planning the best remediation methods, and implementing the remediation with appropriate teams in a timely manner?",
+      "options": [
+        "Security operations center (SOC) analyst",
+        "Threat hunter",
+        "Incident responder",
+        "Penetration tester"
+      ],
+      "answer": 2
+    },
+    {
+      "id": 9,
+      "category": "Cybersecurity",
+      "text": "Which of the following statements is correct about the social engineering tactics that attackers use?",
+      "options": [
+        "Social engineering is the use of deception to manipulate individuals into divulging confidential or personal information that could then be used for fraudulent purposes",
+        "Social engineering can be employed in-person, over the phone, or online through websites, email, and social media",
+        "Social engineering can be a powerful technique that works because humans are not perfect and can exhibit irrational behavior as well as flawed decision making",
+        "All of the above"
+      ],
+      "answer": 3
+    },
+    {
+      "id": 10,
+      "category": "Cybersecurity",
+      "text": "What type of cyber attack involves sending an email to an individual that appears to be from a trusted source, but instead has the intention of getting personal information, such as a password?",
+      "options": [
+        "Domain name system (DNS) attack",
+        "Man in the middle (MitM) attack",
+        "Phishing attack",
+        "Structured query language (SQL) injection"
+      ],
+      "answer": 2
+    },
+    {
+      "id": 11,
+      "category": "Cybersecurity",
+      "text": "Information security's objectives are often defined using the CIA triad. CIA is a mnemonic for the three objectives. What are they?",
+      "options": [
+        "Comprehensive, Integrated, and Accessible",
+        "Confidentiality, Integrity, and Availability",
+        "Confident, Intelligent, and Automatic",
+        "Complete, Impartial, and Aware"
+      ],
+      "answer": 1
+    }
+  ]
+}

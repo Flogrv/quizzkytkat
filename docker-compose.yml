@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  quiz-server:
+    build: .
+    container_name: cybersec-quiz
+    ports:
+      - "2222:2222"  # Port SSH du quiz
+    volumes:
+      - ./data:/app/data          # Persistance de la DB
+      - ./questions.json:/app/questions.json  # Questions personnalisées
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2222"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

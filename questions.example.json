@@ -1,0 +1,16 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "category": "Votre Catégorie",
+      "text": "Votre question ici ?",
+      "options": [
+        "Réponse A",
+        "Réponse B",
+        "Réponse C",
+        "Réponse D"
+      ],
+      "answer": 0
+    }
+  ]
+}

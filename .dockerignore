@@ -1,0 +1,6 @@
+data/
+.git/
+*.db
+.env
+README.md
+.gitignore
