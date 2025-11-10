@@ -34,8 +34,8 @@ RUN apk add --no-cache openssh && \
     ssh-keygen -t ed25519 -f /app/.ssh/id_ed25519 -N "" && \
     apk del openssh
 
-# Copy questions file if exists (will be overridden by volume)
-COPY questions.json* ./questions.json* 2>/dev/null || echo '{"questions":[]}' > questions.json
+# Copy questions file from builder
+COPY --from=builder /app/questions.json ./questions.json
 
 # Expose SSH port
 EXPOSE 2222
