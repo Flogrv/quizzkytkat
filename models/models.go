@@ -4,11 +4,13 @@ import "time"
 
 // Question représente une question du quiz
 type Question struct {
-	ID       int      `json:"id"`
-	Category string   `json:"category"`
-	Text     string   `json:"text"`
-	Options  []string `json:"options"`
-	Answer   int      `json:"answer"` // Index de la bonne réponse
+	ID              int      `json:"id"`
+	Category        string   `json:"category"`
+	Text            string   `json:"text"`
+	Options         []string `json:"options"`
+	Answer          int      `json:"answer"`          // Index de la bonne réponse (original)
+	ShuffledOptions []string `json:"-"`               // Options mélangées (pas sauvegardé en JSON)
+	ShuffledAnswer  int      `json:"-"`               // Index de la bonne réponse après shuffle
 }
 
 // Score représente le score d'un utilisateur

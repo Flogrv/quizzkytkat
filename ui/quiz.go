@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"math/rand"
 	"quizz-ssh/models"
 	"strings"
 	"time"
@@ -33,15 +34,50 @@ type QuizModel struct {
 }
 
 func NewQuizModel(username string, questions []models.Question, category string) QuizModel {
+	// Shuffle les réponses de chaque question
+	shuffledQuestions := make([]models.Question, len(questions))
+	for i, q := range questions {
+		shuffledQuestions[i] = shuffleQuestion(q)
+	}
+
 	return QuizModel{
 		username:     username,
-		questions:    questions,
+		questions:    shuffledQuestions,
 		currentIndex: 0,
 		cursor:       0,
 		score:        0,
 		state:        QuizStateQuestion,
 		category:     category,
 	}
+}
+
+// shuffleQuestion mélange les options d'une question et track la bonne réponse
+func shuffleQuestion(q models.Question) models.Question {
+	// Créer une copie de la question
+	shuffled := q
+
+	// Créer un slice avec les indices
+	indices := make([]int, len(q.Options))
+	for i := range indices {
+		indices[i] = i
+	}
+
+	// Mélanger les indices avec Fisher-Yates
+	rand.Shuffle(len(indices), func(i, j int) {
+		indices[i], indices[j] = indices[j], indices[i]
+	})
+
+	// Créer les nouvelles options mélangées
+	shuffled.ShuffledOptions = make([]string, len(q.Options))
+	for newIdx, oldIdx := range indices {
+		shuffled.ShuffledOptions[newIdx] = q.Options[oldIdx]
+		// Si c'était la bonne réponse, on note sa nouvelle position
+		if oldIdx == q.Answer {
+			shuffled.ShuffledAnswer = newIdx
+		}
+	}
+
+	return shuffled
 }
 
 func (m QuizModel) Init() tea.Cmd {
@@ -82,12 +118,12 @@ func (m QuizModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.cursor--
 				}
 			case "down", "j":
-				if m.cursor < len(m.questions[m.currentIndex].Options)-1 {
+				if m.cursor < len(m.questions[m.currentIndex].ShuffledOptions)-1 {
 					m.cursor++
 				}
 			case "enter", " ":
 				m.userAnswer = m.cursor
-				m.correctAnswer = m.questions[m.currentIndex].Answer
+				m.correctAnswer = m.questions[m.currentIndex].ShuffledAnswer
 				if m.userAnswer == m.correctAnswer {
 					m.score++
 				}
@@ -151,8 +187,13 @@ func (m QuizModel) renderQuestion(b *strings.Builder) {
 	questionBox := BoxStyle.Render(QuestionStyle.Render("❓ " + question.Text))
 	b.WriteString(questionBox + "\n\n")
 
-	// Options
-	for i, option := range question.Options {
+	// Options (utiliser les options shufflées)
+	options := question.ShuffledOptions
+	if len(options) == 0 {
+		options = question.Options // Fallback si pas shufflé
+	}
+
+	for i, option := range options {
 		var line string
 		prefix := fmt.Sprintf("%c) ", 'A'+i)
 
