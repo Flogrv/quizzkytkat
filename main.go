@@ -233,16 +233,18 @@ func (m *appModel) updateQuiz(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.subModel, cmd = m.subModel.Update(msg)
 
 	// Vérifier si le quiz est terminé
-	if _, ok := msg.(tea.QuitMsg); ok {
-		if quizModel, ok := m.subModel.(ui.QuizModel); ok {
+	if quizModel, ok := m.subModel.(ui.QuizModel); ok {
+		if quizModel.IsDone() {
 			// Sauvegarder le score
 			score := quizModel.GetScore()
 			if err := db.SaveScore(score); err != nil {
 				log.Printf("Erreur sauvegarde score: %v", err)
 			}
+			log.Printf("DEBUG: Score sauvegardé, retour au menu")
+			m.subModel = nil
+			m.state = stateMenu
+			return m, nil
 		}
-		m.subModel = nil
-		m.state = stateMenu
 	}
 
 	return m, cmd
@@ -265,9 +267,12 @@ func (m *appModel) updateLeaderboard(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.subModel, cmd = m.subModel.Update(msg)
 
 	// Vérifier si l'utilisateur veut retourner
-	if _, ok := msg.(tea.QuitMsg); ok {
-		m.subModel = nil
-		m.state = stateMenu
+	if lbModel, ok := m.subModel.(ui.LeaderboardModel); ok {
+		if lbModel.IsDone() {
+			m.subModel = nil
+			m.state = stateMenu
+			return m, nil
+		}
 	}
 
 	return m, cmd

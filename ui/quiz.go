@@ -31,6 +31,7 @@ type QuizModel struct {
 	category      string
 	showResult    bool
 	resultTime    time.Time
+	done          bool
 }
 
 func NewQuizModel(username string, questions []models.Question, category string) QuizModel {
@@ -146,7 +147,10 @@ func (m QuizModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case QuizStateFinished:
 			switch msg.String() {
-			case "enter", " ", "q", "ctrl+c":
+			case "enter", " ":
+				m.done = true
+				return m, nil
+			case "q", "ctrl+c":
 				return m, tea.Quit
 			}
 		}
@@ -307,4 +311,8 @@ func (m QuizModel) GetScore() models.Score {
 		Score:    m.score,
 		Total:    len(m.questions),
 	}
+}
+
+func (m QuizModel) IsDone() bool {
+	return m.done
 }
