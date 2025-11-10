@@ -187,7 +187,7 @@ func (m *appModel) updateUsername(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m *appModel) updateMenu(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if m.subModel == nil {
 		m.subModel = ui.NewMenuModel(m.username)
-		return m, m.subModel.Init()
+		return m.updateMenu(msg)
 	}
 
 	var cmd tea.Cmd
@@ -226,7 +226,8 @@ func (m *appModel) updateQuiz(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Toutes les questions (pas de filtre par catégorie)
 		m.subModel = ui.NewQuizModel(m.username, questions, m.category)
 		log.Printf("DEBUG: Quiz model créé, initialisation...")
-		return m, m.subModel.Init()
+		// Force un update immédiat pour afficher le quiz sans attendre
+		return m.updateQuiz(msg)
 	}
 
 	var cmd tea.Cmd
@@ -260,7 +261,7 @@ func (m *appModel) updateLeaderboard(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		stats, _ := db.GetStats()
 		m.subModel = ui.NewLeaderboardModel(m.username, m.category, scores, stats)
-		return m, m.subModel.Init()
+		return m.updateLeaderboard(msg)
 	}
 
 	var cmd tea.Cmd
