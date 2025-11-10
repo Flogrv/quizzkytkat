@@ -5,15 +5,16 @@ import (
 )
 
 var (
-	// Couleurs
-	primaryColor   = lipgloss.Color("#00ff9f")
-	secondaryColor = lipgloss.Color("#7d56f4")
-	accentColor    = lipgloss.Color("#ff6ac1")
-	errorColor     = lipgloss.Color("#ff4757")
-	successColor   = lipgloss.Color("#2ed573")
-	textColor      = lipgloss.Color("#ffffff")
-	dimColor       = lipgloss.Color("#666666")
-	bgColor        = lipgloss.Color("#1a1a1a")
+	// Couleurs One Dark / Dracula
+	primaryColor   = lipgloss.Color("#61afef") // Bleu clair
+	secondaryColor = lipgloss.Color("#c678dd") // Violet
+	accentColor    = lipgloss.Color("#e06c75") // Rouge/Rose
+	errorColor     = lipgloss.Color("#e06c75") // Rouge
+	successColor   = lipgloss.Color("#98c379") // Vert
+	warningColor   = lipgloss.Color("#e5c07b") // Jaune/Or
+	textColor      = lipgloss.Color("#abb2bf") // Gris clair
+	dimColor       = lipgloss.Color("#5c6370") // Gris foncé
+	bgColor        = lipgloss.Color("#282c34") // Fond dark
 
 	// Styles de base
 	TitleStyle = lipgloss.NewStyle().
@@ -49,7 +50,7 @@ var (
 			Padding(0, 2)
 
 	MenuItemSelectedStyle = lipgloss.NewStyle().
-				Foreground(bgColor).
+				Foreground(lipgloss.Color("#282c34")).
 				Background(primaryColor).
 				Bold(true).
 				Padding(0, 2).
@@ -76,19 +77,19 @@ var (
 			Padding(0, 2)
 
 	AnswerSelectedStyle = lipgloss.NewStyle().
-				Foreground(bgColor).
-				Background(accentColor).
+				Foreground(lipgloss.Color("#282c34")).
+				Background(warningColor).
 				Bold(true).
 				Padding(0, 2)
 
 	AnswerCorrectStyle = lipgloss.NewStyle().
-				Foreground(bgColor).
+				Foreground(lipgloss.Color("#282c34")).
 				Background(successColor).
 				Bold(true).
 				Padding(0, 2)
 
 	AnswerWrongStyle = lipgloss.NewStyle().
-				Foreground(bgColor).
+				Foreground(lipgloss.Color("#abb2bf")).
 				Background(errorColor).
 				Bold(true).
 				Padding(0, 2)
@@ -120,15 +121,15 @@ var (
 			Padding(0, 2)
 
 	CategoryBadgeStyle = lipgloss.NewStyle().
-				Foreground(bgColor).
+				Foreground(lipgloss.Color("#282c34")).
 				Background(secondaryColor).
 				Bold(true).
 				Padding(0, 1).
 				MarginRight(1)
 
 	ScoreBadgeStyle = lipgloss.NewStyle().
-			Foreground(bgColor).
-			Background(accentColor).
+			Foreground(lipgloss.Color("#282c34")).
+			Background(warningColor).
 			Bold(true).
 			Padding(0, 1)
 
