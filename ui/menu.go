@@ -11,10 +11,8 @@ import (
 type MenuChoice int
 
 const (
-	MenuQuizAll MenuChoice = iota
-	MenuQuizByCategory
-	MenuLeaderboardGlobal
-	MenuLeaderboardByCategory
+	MenuQuiz MenuChoice = iota
+	MenuLeaderboard
 	MenuQuit
 )
 
@@ -22,15 +20,14 @@ type MenuModel struct {
 	choices  []string
 	cursor   int
 	username string
+	done     bool
 }
 
 func NewMenuModel(username string) MenuModel {
 	return MenuModel{
 		choices: []string{
-			"🎯 Jouer - Toutes les questions",
-			"📚 Jouer - Par catégorie",
-			"🏆 Leaderboard Global",
-			"📊 Leaderboard Par Catégorie",
+			"🎯 Jouer au Quiz",
+			"🏆 Leaderboard",
 			"🚪 Quitter",
 		},
 		cursor:   0,
@@ -46,8 +43,13 @@ func (m MenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c", "q":
+		case "ctrl+c":
 			return m, tea.Quit
+		case "q":
+			// Si on appuie sur q, c'est pour quitter
+			m.cursor = int(MenuQuit)
+			m.done = true
+			return m, nil
 		case "up", "k":
 			if m.cursor > 0 {
 				m.cursor--
@@ -57,7 +59,8 @@ func (m MenuModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.cursor++
 			}
 		case "enter", " ":
-			return m, tea.Quit
+			m.done = true
+			return m, nil
 		}
 	}
 	return m, nil
@@ -97,4 +100,8 @@ func (m MenuModel) View() string {
 
 func (m MenuModel) GetChoice() MenuChoice {
 	return MenuChoice(m.cursor)
+}
+
+func (m MenuModel) IsDone() bool {
+	return m.done
 }

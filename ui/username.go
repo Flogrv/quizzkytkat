@@ -13,6 +13,7 @@ type UsernameModel struct {
 	textInput textinput.Model
 	err       error
 	username  string
+	done      bool // Indique si l'utilisateur a validé son pseudo
 }
 
 func NewUsernameModel() UsernameModel {
@@ -41,12 +42,13 @@ func (m UsernameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			username := strings.TrimSpace(m.textInput.Value())
 			if len(username) >= 3 {
 				m.username = username
-				return m, tea.Quit
+				m.done = true
+				return m, nil // Ne pas quitter, juste marquer comme done
 			}
 			m.err = fmt.Errorf("le pseudo doit faire au moins 3 caractères")
 			return m, nil
 		case tea.KeyCtrlC, tea.KeyEsc:
-			return m, tea.Quit
+			return m, tea.Quit // Vraiment quitter uniquement si Ctrl+C
 		}
 	}
 
@@ -92,4 +94,8 @@ func (m UsernameModel) View() string {
 
 func (m UsernameModel) GetUsername() string {
 	return m.username
+}
+
+func (m UsernameModel) IsDone() bool {
+	return m.done
 }

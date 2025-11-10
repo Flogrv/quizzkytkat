@@ -56,6 +56,14 @@ func shuffleQuestion(q models.Question) models.Question {
 	// Créer une copie de la question
 	shuffled := q
 
+	// Si pas d'options, retourner tel quel
+	if len(q.Options) == 0 {
+		return shuffled
+	}
+
+	// Créer un générateur aléatoire avec seed unique
+	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	// Créer un slice avec les indices
 	indices := make([]int, len(q.Options))
 	for i := range indices {
@@ -63,7 +71,7 @@ func shuffleQuestion(q models.Question) models.Question {
 	}
 
 	// Mélanger les indices avec Fisher-Yates
-	rand.Shuffle(len(indices), func(i, j int) {
+	rng.Shuffle(len(indices), func(i, j int) {
 		indices[i], indices[j] = indices[j], indices[i]
 	})
 
@@ -94,19 +102,6 @@ func waitForResult() tea.Cmd {
 
 func (m QuizModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case resultTimeoutMsg:
-		if m.state == QuizStateResult {
-			m.currentIndex++
-			if m.currentIndex >= len(m.questions) {
-				m.state = QuizStateFinished
-			} else {
-				m.state = QuizStateQuestion
-				m.cursor = 0
-				m.showResult = false
-			}
-		}
-		return m, nil
-
 	case tea.KeyMsg:
 		switch m.state {
 		case QuizStateQuestion:
@@ -129,11 +124,25 @@ func (m QuizModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 				m.state = QuizStateResult
 				m.showResult = true
-				return m, waitForResult()
+				return m, nil
 			}
 
 		case QuizStateResult:
-			// On attend juste le timeout
+			// Appuyer sur Enter pour passer à la question suivante
+			switch msg.String() {
+			case "enter", " ":
+				m.currentIndex++
+				if m.currentIndex >= len(m.questions) {
+					m.state = QuizStateFinished
+				} else {
+					m.state = QuizStateQuestion
+					m.cursor = 0
+					m.showResult = false
+				}
+				return m, nil
+			case "ctrl+c", "q":
+				return m, tea.Quit
+			}
 
 		case QuizStateFinished:
 			switch msg.String() {
@@ -228,7 +237,7 @@ func (m QuizModel) renderQuestion(b *strings.Builder) {
 			msg := ErrorStyle.Render("❌ Mauvaise réponse !")
 			b.WriteString(msg + "\n\n")
 		}
-		help := HelpStyle.Render("Prochaine question dans 2 secondes...")
+		help := HelpStyle.Render("enter: question suivante • q: quitter")
 		b.WriteString(help + "\n")
 	} else {
 		// Help

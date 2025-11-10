@@ -116,10 +116,8 @@ type appState int
 const (
 	stateUsername appState = iota
 	stateMenu
-	stateCategorySelect
 	stateQuiz
 	stateLeaderboard
-	stateQuit
 )
 
 type appModel struct {
@@ -154,8 +152,6 @@ func (m *appModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateUsername(msg)
 	case stateMenu:
 		return m.updateMenu(msg)
-	case stateCategorySelect:
-		return m.updateCategorySelect(msg)
 	case stateQuiz:
 		return m.updateQuiz(msg)
 	case stateLeaderboard:
@@ -174,12 +170,14 @@ func (m *appModel) updateUsername(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	m.subModel, cmd = m.subModel.Update(msg)
 
-	// Vérifier si l'utilisateur a fini
+	// Vérifier si l'utilisateur a validé son pseudo
 	if usernameModel, ok := m.subModel.(ui.UsernameModel); ok {
-		if usernameModel.GetUsername() != "" {
+		if usernameModel.IsDone() {
+			// Pseudo validé, passer au menu
 			m.username = usernameModel.GetUsername()
 			m.state = stateMenu
 			m.subModel = nil
+			return m, nil
 		}
 	}
 
@@ -196,63 +194,25 @@ func (m *appModel) updateMenu(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.subModel, cmd = m.subModel.Update(msg)
 
 	// Vérifier si l'utilisateur a choisi
-	if _, ok := msg.(tea.QuitMsg); ok {
-		if menuModel, ok := m.subModel.(ui.MenuModel); ok {
+	if menuModel, ok := m.subModel.(ui.MenuModel); ok {
+		if menuModel.IsDone() {
 			choice := menuModel.GetChoice()
 			m.subModel = nil
 
+			log.Printf("DEBUG: Menu choice = %d", choice)
+
 			switch choice {
-			case ui.MenuQuizAll:
-				m.category = "all"
+			case ui.MenuQuiz:
+				log.Printf("DEBUG: Switching to quiz state")
+				m.category = "Cybersecurity"
 				m.state = stateQuiz
-			case ui.MenuQuizByCategory:
-				m.state = stateCategorySelect
-			case ui.MenuLeaderboardGlobal:
+			case ui.MenuLeaderboard:
+				log.Printf("DEBUG: Switching to leaderboard state")
 				m.category = "global"
 				m.state = stateLeaderboard
-			case ui.MenuLeaderboardByCategory:
-				m.state = stateCategorySelect
-				m.category = "leaderboard"
 			case ui.MenuQuit:
+				log.Printf("DEBUG: Quitting")
 				return m, tea.Quit
-			}
-		}
-	}
-
-	return m, cmd
-}
-
-func (m *appModel) updateCategorySelect(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if m.subModel == nil {
-		categories := storage.GetUniqueCategories(questions)
-		title := "Choisis une catégorie pour le quiz"
-		if m.category == "leaderboard" {
-			title = "Choisis une catégorie pour le leaderboard"
-		}
-		m.subModel = ui.NewCategorySelectModel(m.username, categories, title)
-		return m, m.subModel.Init()
-	}
-
-	var cmd tea.Cmd
-	m.subModel, cmd = m.subModel.Update(msg)
-
-	// Vérifier si l'utilisateur a choisi
-	if _, ok := msg.(tea.QuitMsg); ok {
-		if catModel, ok := m.subModel.(ui.CategorySelectModel); ok {
-			selectedCat := catModel.GetSelectedCategory()
-			m.subModel = nil
-
-			if selectedCat == "" {
-				// Retour au menu
-				m.state = stateMenu
-			} else {
-				if m.category == "leaderboard" {
-					m.category = selectedCat
-					m.state = stateLeaderboard
-				} else {
-					m.category = selectedCat
-					m.state = stateQuiz
-				}
 			}
 		}
 	}
@@ -262,8 +222,10 @@ func (m *appModel) updateCategorySelect(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *appModel) updateQuiz(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if m.subModel == nil {
-		quizQuestions := storage.GetQuestionsByCategory(questions, m.category)
-		m.subModel = ui.NewQuizModel(m.username, quizQuestions, m.category)
+		log.Printf("DEBUG: Création quiz model avec %d questions pour %s", len(questions), m.username)
+		// Toutes les questions (pas de filtre par catégorie)
+		m.subModel = ui.NewQuizModel(m.username, questions, m.category)
+		log.Printf("DEBUG: Quiz model créé, initialisation...")
 		return m, m.subModel.Init()
 	}
 
