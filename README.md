@@ -13,14 +13,4 @@ ssh -p 2222 quizz.yantekc.com
 Entre ton pseudo, choisis le quiz et teste tes connaissances en cybersécurité !
 
 Navigation : `↑`/`↓` ou `j`/`k` pour naviguer, `Enter` pour valider.
-
-## ✨ Features
-
-- Quiz interactif avec 11 questions de cybersécurité
-- Leaderboard global
-- Interface colorée dans le terminal
-- Scores sauvegardés
-
----
-
-**Have fun! 🚀**
+**Sucez vous**
