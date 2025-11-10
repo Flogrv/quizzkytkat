@@ -226,8 +226,7 @@ func (m *appModel) updateQuiz(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Toutes les questions (pas de filtre par catégorie)
 		m.subModel = ui.NewQuizModel(m.username, questions, m.category)
 		log.Printf("DEBUG: Quiz model créé, initialisation...")
-		// Force un update immédiat pour afficher le quiz sans attendre
-		return m.updateQuiz(msg)
+		return m, m.subModel.Init()
 	}
 
 	var cmd tea.Cmd

@@ -14,7 +14,8 @@ import (
 type QuizState int
 
 const (
-	QuizStateQuestion QuizState = iota
+	QuizStateReady QuizState = iota
+	QuizStateQuestion
 	QuizStateResult
 	QuizStateFinished
 )
@@ -47,7 +48,7 @@ func NewQuizModel(username string, questions []models.Question, category string)
 		currentIndex: 0,
 		cursor:       0,
 		score:        0,
-		state:        QuizStateQuestion,
+		state:        QuizStateReady,
 		category:     category,
 	}
 }
@@ -105,6 +106,16 @@ func (m QuizModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch m.state {
+		case QuizStateReady:
+			// N'importe quelle touche pour commencer
+			switch msg.String() {
+			case "ctrl+c", "q":
+				return m, tea.Quit
+			default:
+				m.state = QuizStateQuestion
+				return m, nil
+			}
+
 		case QuizStateQuestion:
 			switch msg.String() {
 			case "ctrl+c", "q":
@@ -173,6 +184,8 @@ func (m QuizModel) View() string {
 	}
 
 	switch m.state {
+	case QuizStateReady:
+		m.renderReady(&b)
 	case QuizStateQuestion, QuizStateResult:
 		m.renderQuestion(&b)
 	case QuizStateFinished:
@@ -180,6 +193,25 @@ func (m QuizModel) View() string {
 	}
 
 	return lipgloss.NewStyle().Padding(2).Render(b.String())
+}
+
+func (m QuizModel) renderReady(b *strings.Builder) {
+	// Title
+	title := TitleStyle.Render("🎮 Prêt à commencer ? 🎮")
+	b.WriteString(title + "\n\n")
+
+	// Info
+	info := fmt.Sprintf("Catégorie: %s\nNombre de questions: %d", m.category, len(m.questions))
+	infoBox := BoxStyle.Render(QuestionStyle.Render(info))
+	b.WriteString(infoBox + "\n\n")
+
+	// Instructions colorées
+	instructions := SuccessStyle.Render("⚡ Appuyez sur n'importe quelle touche pour commencer le quiz ⚡")
+	b.WriteString(instructions + "\n\n")
+
+	// Help
+	help := HelpStyle.Render("q: retour au menu")
+	b.WriteString(help + "\n")
 }
 
 func (m QuizModel) renderQuestion(b *strings.Builder) {

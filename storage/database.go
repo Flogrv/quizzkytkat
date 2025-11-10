@@ -83,10 +83,13 @@ func (d *Database) GetLeaderboard(category string, limit int) ([]models.Score, e
 	var scores []models.Score
 	for rows.Next() {
 		var score models.Score
-		err := rows.Scan(&score.Username, &score.Category, &score.Score, &score.Total, &score.CreatedAt)
+		var createdAtStr string
+		err := rows.Scan(&score.Username, &score.Category, &score.Score, &score.Total, &createdAtStr)
 		if err != nil {
 			return nil, err
 		}
+		// Parse la date SQLite
+		score.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", createdAtStr)
 		scores = append(scores, score)
 	}
 
